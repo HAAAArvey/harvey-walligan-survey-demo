@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harvey and Walligan — Site Survey Demo</title>
+  <meta name="description" content="A photo-first 360° building survey demo: import a site folder, let AI prepare the findings, review one photo at a time, and export a marked report.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true">
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4.6l2 2.4h8.4A1.5 1.5 0 0 1 21 9.9v8.6a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5Z"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.6"/><rect x="3" y="14" width="18" height="6" rx="1.6"/><path d="M7 7h.01M7 17h.01M11 7h5M11 17h5"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7.2 18.5h10.3a4.2 4.2 0 0 0 .5-8.4 6.2 6.2 0 0 0-11.9-1.2 4.8 4.8 0 0 0 1.1 9.6Z"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 1.7 4.9L18.5 9.6l-4.8 1.7L12 16l-1.7-4.7L5.5 9.6l4.8-1.7Z"/><path d="m18.8 15 .8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8Z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M20 12H5M10.5 6l-6 6 6 6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 6.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.2 3.7M6.5 7.4A17.7 17.7 0 0 0 2.5 12S6 18 12 18a9.7 9.7 0 0 0 4.2-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-plan" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 10h7V4M11 10h9M15 10v10M15 16H4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7.5 11l4.5 4.5 4.5-4.5M4 20h16"/></symbol>
+    <symbol id="i-word" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="m8 12 1.2 5 1.8-3.4L12.8 17 14 12"/></symbol>
+    <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M8 17v-4h2.2a1.3 1.3 0 0 1 0 2.6H8M13 17v-4h1.4a2 2 0 0 1 0 4Z"/></symbol>
+    <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H4.5A1.5 1.5 0 0 0 3 4.5V8M16 3h3.5A1.5 1.5 0 0 1 21 4.5V8M21 16v3.5a1.5 1.5 0 0 1-1.5 1.5H16M8 21H4.5A1.5 1.5 0 0 1 3 19.5V16"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 5v5h5"/><path d="M5.6 10A8 8 0 1 1 4 14.5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.2"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m14.5 5.5 4 4M13 7 19.5 13.5M14 6 9 11l4 4 5-5"/><path d="m9.5 14.5-4.8 4.8a1.6 1.6 0 0 1-2.2-2.2l4.8-4.8"/></symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3s6 6.2 6 10.2A6 6 0 0 1 6 13.2C6 9.2 12 3 12 3Z"/></symbol>
+    <symbol id="i-crack" viewBox="0 0 24 24"><path d="m13 3-2 5 3 2-4 4 2 2-3 5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.3l3.5 2"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5h3l1.5-2h7L17 8.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7 5.3-5.6"/></symbol>
+  </svg>
+
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="#/import" aria-label="Harvey and Walligan home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="3.5" y="3.5" width="25" height="25" rx="2.2"/><path d="M10.5 9.5v13M21.5 9.5v13M10.5 16h11"/><circle cx="25.8" cy="25.8" r="1.7" class="mark-dot"/></svg>
+        </span>
+        <span class="brand-word">Harvey <span class="amp">&amp;</span> Walligan</span>
+        <span class="brand-tag">Survey</span>
+      </a>
+
+      <nav class="stepper" id="stepper" aria-label="Demo steps"></nav>
+
+      <div class="topbar-right">
+        <span class="demo-pill"><span class="demo-dot"></span> Demo</span>
+        <button class="icon-btn" id="helpBtn" type="button" aria-label="Demo notes">
+          <svg class="ic"><use href="#i-info"/></svg>
+        </button>
+        <span class="avatar" title="Surveyor · H. Chau">HC</span>
+      </div>
+    </header>
+
+    <main id="app" class="app" tabindex="-1"></main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-scrim" data-close-modal></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Demo notes</div>
+          <h2 id="modalTitle">What is real, what is simulated</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal aria-label="Close demo notes">
+          <svg class="ic"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This is a UI prototype. It runs entirely in the browser and no files leave this machine. The workflow, review model and report structure are real; the AI pass and the export are simulated for the demo.</p>
+        <h3>Media</h3>
+        <ul>
+          <li><strong>Photos</strong> — real 360° captures, used as labelled placeholders. Classroom: “Classroom — Golden Jubilee Bhavan…” by Biswarup Ganguly, CC BY 3.0, Wikimedia Commons. Hall: “Large Corridor” by Sergej Majboroda, Poly Haven, CC0.</li>
+          <li><strong>Floor plan</strong> — “Reliance Building typical floor plan” (1906), public domain, Wikimedia Commons. Cropped to remove the caption and used as a redacted reference plan.</li>
+        </ul>
+        <h3>Keyboard</h3>
+        <ul class="key-list">
+          <li><span><kbd>←</kbd><kbd>→</kbd></span> move between findings</li>
+          <li><span><kbd>1</kbd>–<kbd>4</kbd></span> set the active layer</li>
+          <li><span><kbd>Enter</kbd></span> keep finding</li>
+          <li><span><kbd>X</kbd></span> not a defect</li>
+          <li><span><kbd>R</kbd></span> reset the demo</li>
+        </ul>
+        <p class="modal-note">Replace <code>assets/photos/</code> and <code>assets/floor-plan.png</code> with your own project files. The README explains the structure and the attribution.</p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" type="button" id="resetDemo">
+          <svg class="ic"><use href="#i-reset"/></svg> Reset demo
+        </button>
+        <button class="btn btn-primary" type="button" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
